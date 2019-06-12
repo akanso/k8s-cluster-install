@@ -73,15 +73,17 @@ Vagrant.configure("2") do |config|
       c.vm.network "forwarded_port", guest: 9080, host: 9080
       # Copy the ssh keys to the vm
       if File.exists?(File.expand_path("./keys/id_rsa"))
-        c.vm.provision "file", source: "./keys/id_rsa", destination: "~/.ssh/id_rsa"          
+        # This is the default and serve just as a reminder
+        c.vm.synced_folder ".", "/vagrant"
+        c.vm.provision "shell",
+          inline: "cp /vagrant/keys/id_rsa ~/.ssh/id_rsa"        
       end
       if File.exists?(File.expand_path("./keys/id_rsa.pub"))
-        c.vm.provision "file", source: "./keys/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
+        c.vm.provision "shell",
+          inline: "cp /vagrant/keys/id_rsa.pub ~/.ssh/id_rsa.pub"
       end
-      c.vm.provision "shell", inline: <<-SHELL
-      # add public ssh key to authorized_keys
-        cat /home/ubuntu/.ssh/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys
-      SHELL
+      config.vm.provision "shell",
+        inline: "cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys"
       
       system('chmod +x ./kube-install.sh')
       system('chmod +x ./kube-master-start.sh')
@@ -106,10 +108,13 @@ Vagrant.configure("2") do |config|
         node.vm.network "forwarded_port", guest: "909#{i}", host: "909#{i}"
         # Copy the ssh keys to the vm
         if File.exists?(File.expand_path("./keys/id_rsa"))
-          node.vm.provision "file", source: "./keys/id_rsa", destination: "~/.ssh/id_rsa"          
+          node.vm.synced_folder ".", "/vagrant"
+          node.vm.provision "shell",
+            inline: "cp /vagrant/keys/id_rsa ~/.ssh/id_rsa"             
         end
         if File.exists?(File.expand_path("./keys/id_rsa.pub"))
-          node.vm.provision "file", source: "./keys/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
+          node.vm.provision "shell",
+          inline: "cp /vagrant/keys/id_rsa.pub ~/.ssh/id_rsa.pub"
         end
         node.vm.provision :shell, :path => "kube-install.sh"
         if File.exists?(File.expand_path("./token.sh"))
