@@ -24,8 +24,8 @@ initialize(){
     fi
 
     if [ "$3" = "" ]; then
-    echo "no KUBE_VERSION setting, defaulting to v1.14.0"
-    KUBE_VERSION="v1.14.0"
+    echo "no KUBE_VERSION setting, defaulting to v1.14.3"
+    KUBE_VERSION="v1.14.3"
     else 
         KUBE_VERSION=$3
     fi

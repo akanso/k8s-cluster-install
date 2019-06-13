@@ -13,14 +13,14 @@ echo -e "
 
 if [ "$1" = "" ]; then
 echo "no NETWORK setting, defaulting to CALICO"
-NETWORK= "CALICO"
+NETWORK="CALICO"
 else 
     NETWORK=$1
 fi
 
 if [ "$2" = "" ]; then
 echo "no GATEWAY setting, defaulting to 192.168.10.2"
-GATEWAY= "192.168.10.2"
+GATEWAY="192.168.10.2"
 else 
     GATEWAY=$2
 fi
@@ -77,7 +77,7 @@ function ctrl_c() {
 #################################################
 #flow:
 #################################################
-[ `whoami` = root ] || exec su -c $0 root
+[ `whoami` = root ] || exec sudo su
 
 trap ctrl_c INT
 

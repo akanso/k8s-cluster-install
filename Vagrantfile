@@ -52,8 +52,7 @@ else
   WORKER_VM_MEMORY=1024
   WORKER_VM_CPU=1
 
-
-  THE_BOX="ubuntu/xenial64"
+  THE_BOX="ubuntu/bionic64"
 end
 
 Vagrant.configure("2") do |config|
@@ -76,14 +75,14 @@ Vagrant.configure("2") do |config|
         # This is the default and serve just as a reminder
         c.vm.synced_folder ".", "/vagrant"
         c.vm.provision "shell",
-          inline: "cp /vagrant/keys/id_rsa ~/.ssh/id_rsa"        
+          inline: "cp /vagrant/keys/id_rsa /home/vagrant/.ssh/id_rsa"        
       end
       if File.exists?(File.expand_path("./keys/id_rsa.pub"))
         c.vm.provision "shell",
-          inline: "cp /vagrant/keys/id_rsa.pub ~/.ssh/id_rsa.pub"
+          inline: "cp /vagrant/keys/id_rsa.pub /home/vagrant/.ssh/id_rsa.pub"
       end
       config.vm.provision "shell",
-        inline: "cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys"
+        inline: "if [ -e /home/vagrant/.ssh/id_rsa.pub ]; then cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys;fi"
       
       system('chmod +x ./kube-install.sh')
       system('chmod +x ./kube-master-start.sh')
@@ -110,11 +109,11 @@ Vagrant.configure("2") do |config|
         if File.exists?(File.expand_path("./keys/id_rsa"))
           node.vm.synced_folder ".", "/vagrant"
           node.vm.provision "shell",
-            inline: "cp /vagrant/keys/id_rsa ~/.ssh/id_rsa"             
+            inline: "cp /vagrant/keys/id_rsa /home/vagrant/.ssh/id_rsa"             
         end
         if File.exists?(File.expand_path("./keys/id_rsa.pub"))
           node.vm.provision "shell",
-          inline: "cp /vagrant/keys/id_rsa.pub ~/.ssh/id_rsa.pub"
+          inline: "cp /vagrant/keys/id_rsa.pub /home/vagrant/.ssh/id_rsa.pub"
         end
         node.vm.provision :shell, :path => "kube-install.sh"
         if File.exists?(File.expand_path("./token.sh"))
