@@ -25,7 +25,7 @@ initialize(){
 
     if [ "$3" = "" ]; then
     echo "no KUBE_VERSION setting, defaulting to v1.14.3"
-    KUBE_VERSION="v1.14.3"
+    KUBE_VERSION="v1.15.0"
     else 
         KUBE_VERSION=$3
     fi
@@ -38,8 +38,7 @@ install_k8s(){
 
     if [ "$NETWORK" = "CALICO" ]; then
         echo "using calico networking"
-        kubeadm init  --kubernetes-version $KUBE_VERSION --apiserver-advertise-address=$GATEWAY --pod-network-cidr=10.244.0.0/16 --token-ttl 0 | tee token.sh
-        route add 10.96.0.1 gw $GATEWAY
+        kubeadm init  --kubernetes-version $KUBE_VERSION --apiserver-advertise-address=$GATEWAY --pod-network-cidr=192.168.0.0/16 --token-ttl 0 | tee token.sh
     else
         kubeadm init  --kubernetes-version $KUBE_VERSION --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=$GATEWAY --token-ttl 0 | tee token.sh 
     fi
@@ -59,7 +58,7 @@ install_k8s(){
         kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
 
     elif [ "$NETWORK" = "CALICO" ]; then # using calico
-        kubectl apply -f https://docs.projectcalico.org/v3.7/manifests/calico.yaml
+         KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://docs.projectcalico.org/v3.7/manifests/calico.yaml
 
     else
         KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features.yaml
@@ -97,6 +96,6 @@ function ctrl_c() {
 
 trap ctrl_c INT
 
-initialize $1 $2 
+initialize $1 $2 $3
 
 install_k8s

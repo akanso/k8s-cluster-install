@@ -69,7 +69,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "master-node" do |c|
       c.vm.hostname = "master-node"
       c.vm.network "private_network", ip: "192.168.10.2"
-      c.vm.network "forwarded_port", guest: 9080, host: 9080
+      c.vm.network "forwarded_port", guest: 30001, host: 30001
       # Copy the ssh keys to the vm
       if File.exists?(File.expand_path("./keys/id_rsa"))
         # This is the default and serve just as a reminder

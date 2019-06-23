@@ -5,3 +5,4 @@ token.sh
 *.retry
 *.log
 keys/id_*
+admin.conf

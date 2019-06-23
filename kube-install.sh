@@ -49,11 +49,12 @@ deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
 apt-get install -y kubelet kubeadm kubectl
+#apt-get install kubectl #installs v1.15 and kubeadm is not there yet.
+#curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.3/bin/linux/amd64/kubectl
+#chmod +x ./kubectl
+#sudo mv ./kubectl /usr/bin/kubectl
+systemctl enable docker.service
 
-if [ "$NETWORK" = "CALICO" ]; then
-    echo "using calico networking"
-    route add 10.96.0.1 gw $GATEWAY
-fi
 }
 
 
