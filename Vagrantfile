@@ -120,6 +120,9 @@ Vagrant.configure("2") do |config|
           system('chmod +x ./token.sh')
           node.vm.provision :shell, :path => "token.sh"         
         end
+        node.vm.provision "shell",
+        inline: " KUBECONFIG=/vagrant/kube.conf kubectl label node worker-node#{i} node-role.kubernetes.io/worker=worker"
+        
 
         config.vm.provider "virtualbox" do |vb|
             vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]

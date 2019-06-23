@@ -49,10 +49,11 @@ kubectl get nodes
 You should see that your nodes are up and ready. (it might take a minute to get to the ready state)
 
 ```shell
-NAME           STATUS    ROLES     AGE       VERSION
-master-node    Ready     master    2m        v1.8.2
-worker-node1   Ready     <none>    1m        v1.8.2
-worker-node2   Ready     <none>    1m        v1.8.2
+kubectl get nodes
+NAME           STATUS   ROLES    AGE   VERSION
+master-node    Ready    master   46m   v1.15.0
+worker-node1   Ready    worker   44m   v1.15.0
+worker-node2   Ready    worker   42m   v1.15.0
 ```
 
 ## Customizing the k8s deployment and the number/size of the VMs
