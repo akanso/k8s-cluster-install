@@ -24,7 +24,7 @@ initialize(){
     fi
 
     if [ "$3" = "" ]; then
-    echo "no KUBE_VERSION setting, defaulting to v1.14.3"
+    echo "no KUBE_VERSION setting, defaulting to v1.15"
     KUBE_VERSION="v1.15.0"
     else 
         KUBE_VERSION=$3
@@ -38,9 +38,9 @@ install_k8s(){
 
     if [ "$NETWORK" = "CALICO" ]; then
         echo "using calico networking"
-        kubeadm init  --kubernetes-version $KUBE_VERSION --apiserver-advertise-address=$GATEWAY --pod-network-cidr=192.168.0.0/16 --token-ttl 0 | tee token.sh
+        kubeadm init  --kubernetes-version $KUBE_VERSION --apiserver-advertise-address=$GATEWAY --pod-network-cidr=10.240.0.0/16 --token-ttl 0 | tee token.sh
     else
-        kubeadm init  --kubernetes-version $KUBE_VERSION --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=$GATEWAY --token-ttl 0 | tee token.sh 
+        kubeadm init  --kubernetes-version $KUBE_VERSION --pod-network-cidr=10.240.0.0/16 --apiserver-advertise-address=$GATEWAY --token-ttl 0 | tee token.sh 
     fi
 
         echo "$(tail -n 2 token.sh)" > token.sh
