@@ -29,7 +29,7 @@ fi
 #################################################
 # intsall Docker, kubelet, kubeadm, kubectl
 #################################################
-intsall_kube-adm(){
+install_kube-adm(){
 
 echo "installing kube-adm"
 modprobe br_netfilter
@@ -85,6 +85,6 @@ trap ctrl_c INT
 initialize $1 $2 
 
 
-intsall_kube-adm
+install_kube-adm
 
 

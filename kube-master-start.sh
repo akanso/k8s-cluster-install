@@ -25,7 +25,7 @@ initialize(){
 
     if [ "$3" = "" ]; then
     echo "no KUBE_VERSION setting, defaulting to v1.15"
-    KUBE_VERSION="v1.15.0"
+    KUBE_VERSION="v1.16.0"
     else 
         KUBE_VERSION=$3
     fi
@@ -51,14 +51,15 @@ install_k8s(){
         yes | cp -rf -i /etc/kubernetes/admin.conf /vagrant/kube.conf
         yes | mv -f token.sh $HOME/.kube/token.sh
         chown $(id -u):$(id -g) $HOME/.kube/config
-        kubectl taint nodes --all node-role.kubernetes.io/master-
-
+        #kubectl taint nodes --all node.kubernetes.io/not-ready:NoSchedule-
+        kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
     if [ "$NETWORK" = "CANAL" ]; then
         kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/rbac.yaml
         kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
 
     elif [ "$NETWORK" = "CALICO" ]; then # using calico
-         KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://docs.projectcalico.org/v3.7/manifests/calico.yaml
+        # KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://docs.projectcalico.org/v2.1/getting-started/kubernetes/installation/hosted/kubeadm/1.6/calico.yaml
+        kubectl apply -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
 
     else
         KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features.yaml
@@ -66,7 +67,8 @@ install_k8s(){
         docker run --privileged --net=host gcr.io/google_containers/kube-proxy-amd64:v1.7.3 kube-proxy --cleanup-iptables
     fi
 
-    kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+    #kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
     echo -e "\nuse the following command on the worker nodes to join the cluster: \n"
     cat $HOME/.kube/token.sh
 }

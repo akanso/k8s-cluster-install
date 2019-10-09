@@ -72,5 +72,11 @@ $worker_vm_cpu=1
 
 For example, you can set the `worker_vm_count` to `3` and run `vagrant up` again. This will create and extra worker VM (leaving the existing one intact), install kubernetes of that woker, and join it to the existing k8s cluster.
 
-You can customize the k8s installation by modifying the content of the [`kube-master-start.sh`](https://github.com/akanso/k8s-cluster-install/blob/master/kube-master-start.sh). 
+You can customize the k8s installation by modifying the content of the [`kube-master-start.sh`](https://github.com/akanso/k8s-cluster-install/blob/master/kube-master-start.sh).
 for instance you can change the `--pod-network-cidr=192.168.0.0/16` according to your network config, if needed.
+
+## To cleanup the VMs
+
+to remove all the VMs:
+
+`yes | vagrant destroy -f`
